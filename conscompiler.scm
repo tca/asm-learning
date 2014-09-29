@@ -1,5 +1,8 @@
-;; csi conscompiler.scm > test1.asm
-;; nasm -g -felf64 test1.asm && ld test1.o -o test1
+;; currently doesn't run.. just a bunch of lparens
+;;
+;; to run:
+;; csi -q conscompiler.scm > test1.asm
+;; nasm -g -felf64 test1.asm && ld test1.o -o test1 && ./test1
 
 (define *log* '())
 (define (push! v) (set! *log* (cons v *log* )))
@@ -78,7 +81,7 @@
 (define (print-string! s n)
   (push! `(push ,n))
   (push! `(push ,s))
-  (push! `(jmp pop_print)))
+  (push! `(push pop_print)))
 
 
 (define (pop-print)
@@ -96,8 +99,8 @@
   (push! `(label print_obj))
   (push! `(mov rax "[r10]"))    ; load pointer stored in r10 into rax
   (push! `(mov rbx rax))        ; make backup coqpy of pointer
-  (get-tag! 'rax)                ; get pointer tag to compare against
   (push! `(lea r10 "[r10-64]")) ; increment the traversal pointer r10
+  (get-tag! 'rax)                ; get pointer tag to compare against
   (jmp= 0 'end)
   (jmp= 1 'print_cons)
   (jmp= 2 'print_number))
