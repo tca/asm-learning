@@ -126,12 +126,6 @@ print_int:
         
 print_cons:
 ;;;  recursively call print_tree on the car and cdr
-;;;  push cdr
-;;;  push car
-;;;  push print_cons1
-;;;  jmp print_tree
-;;;  print_tree will end up back at print_cons1
-    
         mov rsi, lparen         ; load char ptr
         mov rdx, 1              ; set length
         mov rdi, 1              ; fd
@@ -168,32 +162,28 @@ _start:
         xor rdi,rdi   ;; 0 (get end in rax)
         syscall
         mov qword [end], rax
-        
+
 start0:
-        ;; 2
-        push 2
+        ;; 1
+        push 1
         push start1
         jmp alloc_int
 start1:
-        ;; ()
+        ;; 1 | 2
+        push 2
         push start2
-        jmp alloc_nil
-start2:
-        ;; (2 . ())
-        push start3
-        jmp alloc_cons
-start3:
-        ;; 1
-        push 1
-        push start4
         jmp alloc_int
+start2:
+        ;; 1 | 2 | ()
+        push start3
+        jmp alloc_nil
+start3:
+        ;; 1 | (2 . ())
+        push start4
+        jmp alloc_cons
+
 start4:
         ;; (1 . (2 . ()))
-        pop rax
-        pop rbx
-        push rax
-        push rbx
-        
         push start5
         jmp alloc_cons
 start5:
