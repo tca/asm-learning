@@ -36,12 +36,10 @@ alloc:
         pop rdx                 ; get cont
         push rax
         jmp rdx
-        
 alloc_nil:
         pop rdx
         push 0
         jmp rdx
-        
 alloc_int:
         ;; allocate memory to hold int
         push alloc_int1
@@ -162,7 +160,6 @@ _start:
         xor rdi,rdi   ;; 0 (get end in rax)
         syscall
         mov qword [end], rax
-
 start0:
         ;; 1
         push 1
@@ -181,7 +178,6 @@ start3:
         ;; 1 | (2 . ())
         push start4
         jmp alloc_cons
-
 start4:
         ;; (1 . (2 . ()))
         push start5
